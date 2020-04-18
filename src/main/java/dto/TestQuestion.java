@@ -1,14 +1,11 @@
 package dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * DTO-entity realization of test question
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
+@Data
 public class TestQuestion {
 
     private String question;

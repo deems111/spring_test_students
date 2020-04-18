@@ -11,11 +11,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of TestQuestionDao
+ * Implementation of TestQuestionDao15
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Getter
 @Setter
 public class TestQuestionDaoImpl implements TestQuestionDao {

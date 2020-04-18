@@ -3,7 +3,7 @@ package service;
 import controller.StudentTestControllerImpl;
 import dao.TestQuestionDaoImpl;
 import dto.TestQuestion;
-import lombok.*;
+import lombok.Data;
 import service.interfaces.Test;
 
 import java.util.Set;
@@ -12,15 +12,11 @@ import java.util.Set;
 /**
  * Implementation of Test for students testing
  */
-@AllArgsConstructor
-@Getter
-@Setter
-@NoArgsConstructor
 @Data
 public class TestImpl implements Test {
 
-    private StudentTestControllerImpl controller;
-    private TestQuestionDaoImpl questionDao;
+    private final StudentTestControllerImpl controller;
+    private final TestQuestionDaoImpl questionDao;
 
     //before testing
     private void init(int size) {
