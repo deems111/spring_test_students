@@ -1,21 +1,23 @@
 package controller;
 
 import controller.interfaces.StudentsTestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Implementation of StudentsTestController
  */
+@Controller
 public class StudentTestControllerImpl implements StudentsTestController {
 
+    @Autowired
     private BufferedReader reader;
 
     @Override
     public void startTest() {
-        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override

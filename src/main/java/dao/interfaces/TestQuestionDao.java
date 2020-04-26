@@ -9,5 +9,5 @@ import java.util.Set;
  */
 public interface TestQuestionDao {
 
-    Set<TestQuestion> getQuestions ();
+    Set<TestQuestion> getQuestions (String fileName);
 }

@@ -3,6 +3,7 @@ package dao;
 import dao.interfaces.TestQuestionDao;
 import dto.TestQuestion;
 import lombok.*;
+import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,28 +12,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of TestQuestionDao15
+ * Implementation of TestQuestionDao
  */
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@Repository
 public class TestQuestionDaoImpl implements TestQuestionDao {
-
-    private String fileName;
 
     //getting set of questions
     @Override
-    public Set<TestQuestion> getQuestions() {
+    public Set<TestQuestion> getQuestions(String fileName) {
         Set<TestQuestion> questions = new HashSet<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(fileName)))) {
             while (reader.ready()) {
                 TestQuestion question = new TestQuestion();
-                String [] readedStringArr = reader.readLine().split(";");
+                String[] readStringArr = reader.readLine().split(";");
 
-                if (readedStringArr.length ==2) {
-                    question.setQuestion(readedStringArr[0]);
-                    question.setRightAnswer(readedStringArr[1]);
+                if (readStringArr.length == 2) {
+                    question.setQuestion(readStringArr[0]);
+                    question.setRightAnswer(readStringArr[1]);
                     questions.add(question);
                 }
             }

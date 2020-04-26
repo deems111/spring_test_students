@@ -5,4 +5,7 @@ package service.interfaces;
  */
 public interface Test {
     void test();
+
+    void initLocale();
+
 }
