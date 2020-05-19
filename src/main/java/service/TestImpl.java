@@ -5,12 +5,12 @@ import dao.TestQuestionDaoImpl;
 import dto.TestQuestion;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import service.interfaces.Test;
 
-import java.util.Locale;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Set;
 
 
@@ -21,47 +21,47 @@ import java.util.Set;
 @Service
 public class TestImpl implements Test {
 
-    @Autowired
     private final StudentTestControllerImpl controller;
-    @Autowired
     private final TestQuestionDaoImpl questionDao;
+    private final MessageImpl messageSourceService;
+    private final PrintImpl printService;
+
     @Autowired
-    private final MessageSource messageSource;
+    public TestImpl(StudentTestControllerImpl controller, TestQuestionDaoImpl questionDao,
+                    MessageImpl messageSourceService, PrintImpl printService) {
+        this.controller = controller;
+        this.questionDao = questionDao;
+        this.messageSourceService = messageSourceService;
+        this.printService = printService;
+    }
 
-    @Value("${file.name.en}")
-    private String fileNameEN;
+    @Override
+    public void init(PrintStream out, InputStreamReader in) {
+        messageSourceService.init();
+        printService.init(out, in);
+    }
 
-    @Value("${file.name.ru}")
-    private String fileNameRu;
-
-    @Value("${language}")
-    private String language;
-
-    private Locale locale;
-
-    //before testing
-    private void init(int size) {
+    public void startTest(int size) {
         if (size == 0) {
-            System.out.println(messageSource.getMessage("test.error", new Object[]{}, locale));
+            printService.printLine(messageSourceService.getErrorMessage());
             return;
         }
-        System.out.println(messageSource.getMessage("test.hello", new Object[]{}, locale));
-        System.out.println(messageSource.getMessage("test.consists", new Object[]{size}, locale));
-        System.out.println(messageSource.getMessage("test.rules", new Object[]{}, locale));
+        printService.printLine(messageSourceService.getHelloMessage(size));
     }
 
     //access to DAO
     public Set<TestQuestion> getDao() {
-        return questionDao.getQuestions(locale == Locale.ENGLISH ? fileNameEN : fileNameRu);
+        return questionDao.getQuestions(messageSourceService.getFileName());
     }
 
     @Override
-    public void test() {
-        initLocale();
+    public void test(PrintStream out, InputStreamReader in) {
+        init(out, in);
         Set<TestQuestion> testQuestions = getDao();
         int numOfQuestions = testQuestions.size();
         int numOfRightAnswers = 0;
-        init(numOfQuestions);
+        startTest(numOfQuestions);
+        controller.startTest(in);
         for (TestQuestion question : testQuestions) {
             String answer = controller.test(question.getQuestion());
             if (question.getRightAnswer().equals(answer.trim())) {
@@ -69,21 +69,10 @@ public class TestImpl implements Test {
             }
         }
 
-        System.out.println(messageSource.getMessage("test.completed", new Object[]{}, locale));
         if (numOfRightAnswers == 0) {
-            System.out.println(messageSource.getMessage("test.result.failed", new Object[]{}, locale));
+            printService.printLine(messageSourceService.getResultMessage(false, numOfRightAnswers, numOfQuestions));
         } else {
-            System.out.println(messageSource.getMessage("test.result.pass", new Object[]{}, locale));
-        }
-        System.out.println(messageSource.getMessage("test.result", new Object[]{numOfRightAnswers, numOfQuestions}, locale));
-    }
-
-    @Override
-    public void initLocale() {
-        if (getLocale() == null || getLanguage().equalsIgnoreCase("en")) {
-            setLocale(Locale.ENGLISH);
-        } else {
-            setLocale(null);
+            printService.printLine(messageSourceService.getResultMessage(true, numOfRightAnswers, numOfQuestions));
         }
     }
 

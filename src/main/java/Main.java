@@ -1,17 +1,17 @@
 import configuration.MessageSourceConfig;
-import configuration.ReaderConfig;
 import org.springframework.context.annotation.*;
 import service.TestImpl;
 
+import java.io.InputStreamReader;
+
 @PropertySource("classpath:app.properties")
-@Configuration
 @ComponentScan(basePackages = {"controller", "dao", "dto", "service"})
-@Import({MessageSourceConfig.class, ReaderConfig.class})
+@Import({MessageSourceConfig.class})
 public class Main {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         TestImpl test = context.getBean(TestImpl.class);
-        test.test();
+        test.test(System.out, new InputStreamReader(System.in));
     }
 }

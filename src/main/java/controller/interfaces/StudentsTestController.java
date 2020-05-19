@@ -1,5 +1,7 @@
 package controller.interfaces;
 
+import java.io.InputStreamReader;
+
 /**
  * Base interface for students testing
  */
@@ -8,7 +10,7 @@ public interface StudentsTestController {
     /**
      * Initialization
      */
-    void startTest();
+    void startTest(InputStreamReader streamReader);
 
     /**
      * End - close resources
