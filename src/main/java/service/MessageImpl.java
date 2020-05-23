@@ -7,7 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import service.interfaces.Message;
 
-import java.util.*;
+import java.util.Locale;
 
 /**
  * Service for MessageSource
@@ -35,47 +35,18 @@ public class MessageImpl implements Message {
     }
 
     @Override
-    public void init() {
+    public String getMessage(String textBundle, Object... objects) {
+        return messageSource.getMessage(textBundle, objects, locale);
+    }
+
+    @Override
+    public String getFileName() {
         if (getLocale() == null || getLanguage().equalsIgnoreCase("en")) {
             setLocale(Locale.ENGLISH);
         } else {
             setLocale(null);
         }
-    }
-
-    @Override
-    public String getMessage(String textBundle) {
-        return messageSource.getMessage(textBundle, new Object[]{}, locale);
-    }
-
-    @Override
-    public String getFileName() {
         return locale == Locale.ENGLISH ? fileNameEN : fileNameRu;
-    }
-
-    @Override
-    public String getHelloMessage(int size) {
-        return messageSource.getMessage("test.hello", new Object[]{}, locale) + "\n" +
-                messageSource.getMessage("test.consists", new Object[]{size}, locale) + "\n" +
-                messageSource.getMessage("test.rules", new Object[]{}, locale) + "\n";
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return messageSource.getMessage("error", new Object[]{}, locale);
-    }
-
-    @Override
-    public String getResultMessage(boolean passed, int numOfRightAnswers, int numOfQuestions) {
-        String result = messageSource.getMessage("test.completed", new Object[]{}, locale) + "\n";
-
-        if (passed) {
-            result+= messageSource.getMessage("test.result.pass", new Object[]{}, locale) + "\n";
-        } else {
-            result+= messageSource.getMessage("test.result.failed", new Object[]{}, locale) + "\n";
-        }
-            result+= messageSource.getMessage("test.result", new Object[]{numOfRightAnswers, numOfQuestions}, locale) + "\n";
-    return result;
     }
 
 }

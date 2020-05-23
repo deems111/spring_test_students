@@ -9,5 +9,4 @@ public interface Print {
 
     void printLine(String line);
 
-    void init(PrintStream out, Reader in);
 }

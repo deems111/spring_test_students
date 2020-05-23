@@ -1,6 +1,6 @@
 package service.interfaces;
 
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 /**
@@ -8,7 +8,5 @@ import java.io.PrintStream;
  */
 public interface Test {
 
-    void init(PrintStream out, InputStreamReader in);
-
-    void test(PrintStream out, InputStreamReader in);
+    void test();
 }

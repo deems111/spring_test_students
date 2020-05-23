@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import service.interfaces.Test;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Set;
 
@@ -25,28 +24,29 @@ public class TestImpl implements Test {
     private final TestQuestionDaoImpl questionDao;
     private final MessageImpl messageSourceService;
     private final PrintImpl printService;
+    private final PrintStream out;
+    private final InputStream in;
 
     @Autowired
     public TestImpl(StudentTestControllerImpl controller, TestQuestionDaoImpl questionDao,
-                    MessageImpl messageSourceService, PrintImpl printService) {
+                    MessageImpl messageSourceService, PrintImpl printService, PrintStream out, InputStream in) {
         this.controller = controller;
         this.questionDao = questionDao;
         this.messageSourceService = messageSourceService;
         this.printService = printService;
-    }
-
-    @Override
-    public void init(PrintStream out, InputStreamReader in) {
-        messageSourceService.init();
-        printService.init(out, in);
+        this.out = out;
+        this.in = in;
     }
 
     public void startTest(int size) {
         if (size == 0) {
-            printService.printLine(messageSourceService.getErrorMessage());
+            printService.printLine(messageSourceService.getMessage("error"));
             return;
         }
-        printService.printLine(messageSourceService.getHelloMessage(size));
+
+        printService.printLine(messageSourceService.getMessage("test.hello"));
+        printService.printLine(messageSourceService.getMessage("test.consists", size));
+        printService.printLine(messageSourceService.getMessage("test.rules"));
     }
 
     //access to DAO
@@ -55,13 +55,12 @@ public class TestImpl implements Test {
     }
 
     @Override
-    public void test(PrintStream out, InputStreamReader in) {
-        init(out, in);
+    public void test() {
         Set<TestQuestion> testQuestions = getDao();
         int numOfQuestions = testQuestions.size();
         int numOfRightAnswers = 0;
         startTest(numOfQuestions);
-        controller.startTest(in);
+        controller.startTest();
         for (TestQuestion question : testQuestions) {
             String answer = controller.test(question.getQuestion());
             if (question.getRightAnswer().equals(answer.trim())) {
@@ -69,11 +68,13 @@ public class TestImpl implements Test {
             }
         }
 
+        printService.printLine(messageSourceService.getMessage("test.completed"));
         if (numOfRightAnswers == 0) {
-            printService.printLine(messageSourceService.getResultMessage(false, numOfRightAnswers, numOfQuestions));
+            printService.printLine(messageSourceService.getMessage("test.result.failed"));
         } else {
-            printService.printLine(messageSourceService.getResultMessage(true, numOfRightAnswers, numOfQuestions));
+            printService.printLine(messageSourceService.getMessage("test.result.pass"));
         }
+        printService.printLine(messageSourceService.getMessage("test.result", numOfRightAnswers, numOfQuestions));
     }
 
 }
