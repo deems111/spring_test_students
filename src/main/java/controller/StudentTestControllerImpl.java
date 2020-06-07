@@ -1,21 +1,26 @@
 package controller;
 
 import controller.interfaces.StudentsTestController;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Implementation of StudentsTestController
  */
+@Controller
+@Setter
 public class StudentTestControllerImpl implements StudentsTestController {
 
+    private final InputStream in;
     private BufferedReader reader;
 
-    @Override
-    public void startTest() {
-        reader = new BufferedReader(new InputStreamReader(System.in));
+    public StudentTestControllerImpl(InputStream in) {
+        this.in = in;
+        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
     }
 
     @Override
@@ -29,9 +34,7 @@ public class StudentTestControllerImpl implements StudentsTestController {
 
     @Override
     public String test(String testQuestion) {
-        if (reader == null) {
-            startTest();
-        }
+
         String answer = "";
         try {
             System.out.println(testQuestion + "?");
