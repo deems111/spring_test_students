@@ -24,8 +24,6 @@ public class TestImpl implements Test {
     private final TestQuestionDaoImpl questionDao;
     private final MessageImpl messageSourceService;
     private final PrintImpl printService;
-    private final PrintStream out;
-    private final InputStream in;
 
     @Autowired
     public TestImpl(StudentTestControllerImpl controller, TestQuestionDaoImpl questionDao,
@@ -34,8 +32,6 @@ public class TestImpl implements Test {
         this.questionDao = questionDao;
         this.messageSourceService = messageSourceService;
         this.printService = printService;
-        this.out = out;
-        this.in = in;
     }
 
     public void startTest(int size) {
@@ -60,7 +56,6 @@ public class TestImpl implements Test {
         int numOfQuestions = testQuestions.size();
         int numOfRightAnswers = 0;
         startTest(numOfQuestions);
-        controller.startTest();
         for (TestQuestion question : testQuestions) {
             String answer = controller.test(question.getQuestion());
             if (question.getRightAnswer().equals(answer.trim())) {

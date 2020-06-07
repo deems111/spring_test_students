@@ -18,9 +18,9 @@ public class StudentTestControllerImpl implements StudentsTestController {
     private final InputStream in;
     private BufferedReader reader;
 
-    @Autowired
     public StudentTestControllerImpl(InputStream in) {
         this.in = in;
+        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
     }
 
     @Override
@@ -33,15 +33,7 @@ public class StudentTestControllerImpl implements StudentsTestController {
     }
 
     @Override
-    public void startTest() {
-        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-    }
-
-    @Override
     public String test(String testQuestion) {
-        if (reader == null) {
-            startTest();
-        }
 
         String answer = "";
         try {

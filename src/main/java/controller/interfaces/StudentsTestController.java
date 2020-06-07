@@ -9,11 +9,6 @@ import java.io.UnsupportedEncodingException;
 public interface StudentsTestController {
 
     /**
-     * Initialization
-     */
-    void startTest();
-
-    /**
      * End - close resources
      */
     void endTest();
