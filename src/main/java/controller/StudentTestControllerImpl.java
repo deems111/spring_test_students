@@ -2,7 +2,6 @@ package controller;
 
 import controller.interfaces.StudentsTestController;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.*;
@@ -15,12 +14,10 @@ import java.nio.charset.StandardCharsets;
 @Setter
 public class StudentTestControllerImpl implements StudentsTestController {
 
-    private final InputStream in;
+    private InputStream in;
     private BufferedReader reader;
 
-    public StudentTestControllerImpl(InputStream in) {
-        this.in = in;
-        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+    public StudentTestControllerImpl() {
     }
 
     @Override
@@ -34,7 +31,9 @@ public class StudentTestControllerImpl implements StudentsTestController {
 
     @Override
     public String test(String testQuestion) {
-
+        if (reader == null) {
+            setReader();
+        }
         String answer = "";
         try {
             System.out.println(testQuestion + "?");
@@ -43,6 +42,10 @@ public class StudentTestControllerImpl implements StudentsTestController {
             e.printStackTrace();
         }
         return answer;
+    }
+
+    private void setReader() {
+        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
     }
 
 }

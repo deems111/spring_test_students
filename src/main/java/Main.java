@@ -1,15 +1,13 @@
-import configuration.Config;
-import org.springframework.context.annotation.*;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import service.TestImpl;
 
-@PropertySource("classpath:app.properties")
-@ComponentScan(basePackages = {"controller", "dao", "dto", "service"})
-@Import({Config.class})
+@SpringBootApplication
+@ComponentScan(basePackages = {"configuration", "controller", "dao", "dto", "service"})
 public class Main {
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-        TestImpl test = context.getBean(TestImpl.class);
-        test.test();
+        SpringApplication.run(Main.class, args).getBean(TestImpl.class).test(System.out, System.in);
     }
 }

@@ -1,0 +1,6 @@
+app:
+  locale: en_US
+  fileName: questions/questions
+  langMap:
+    ru_RU: Russian
+    en_US: English

@@ -1,8 +1,8 @@
 package service;
 
+import configuration.LanguageConfig;
 import controller.StudentTestControllerImpl;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import testConfig.TestConfig;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,15 +27,20 @@ public class TestImplTest {
     private TestImpl test;
     @Autowired
     private StudentTestControllerImpl controller;
+    @Autowired
+    private LanguageConfig languageConfig;
 
     @Test
     public void testTest() throws Exception {
+        languageConfig.setLocale(Locale.ENGLISH);
+        languageConfig.setFileName("questions/questions_en_US");
         controller.setReader(null);
         when(controller.test(anyString()))
                 .thenReturn("1024")
                 .thenReturn("255")
                 .thenReturn("15");
-        test.test();
+        System.setOut(new PrintStream(new File("C://Users//dmitr//test.txt")));
+        test.test(System.out, System.in);
 
         StringBuilder expected = new StringBuilder("Test for student")
                 .append("Test consists of 3 question(s)")
@@ -42,7 +48,9 @@ public class TestImplTest {
                 .append("Test completed")
                 .append("Test passed")
                 .append("Number of correct answers - 3 from 3");
-        Assert.assertEquals(expected.toString(), getResultString());
+        Assert.assertTrue(getResultString().contains(expected.toString()));
+
+        System.setOut(System.out);
     }
 
     private String getResultString() throws Exception {
