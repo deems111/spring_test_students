@@ -14,14 +14,9 @@ import java.io.Reader;
 @Service
 public class PrintImpl implements Print {
 
-    private final PrintStream out;
-    private final InputStream in;
+    private PrintStream out;
+    private InputStream in;
 
-    @Autowired
-    public PrintImpl(PrintStream out, InputStream in) {
-        this.out = out;
-        this.in = in;
-    }
 
     @Override
     public void printLine(String line) {

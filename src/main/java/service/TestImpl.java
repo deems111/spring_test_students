@@ -1,5 +1,6 @@
 package service;
 
+import configuration.LanguageConfig;
 import controller.StudentTestControllerImpl;
 import dao.TestQuestionDaoImpl;
 import dto.TestQuestion;
@@ -7,9 +8,11 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.interfaces.Test;
+import utility.LocaleUtil;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.Set;
 
 
@@ -24,14 +27,16 @@ public class TestImpl implements Test {
     private final TestQuestionDaoImpl questionDao;
     private final MessageImpl messageSourceService;
     private final PrintImpl printService;
+    private final LanguageConfig languageConfig;
 
     @Autowired
     public TestImpl(StudentTestControllerImpl controller, TestQuestionDaoImpl questionDao,
-                    MessageImpl messageSourceService, PrintImpl printService, PrintStream out, InputStream in) {
+                    MessageImpl messageSourceService, PrintImpl printService, LanguageConfig languageConfig) {
         this.controller = controller;
         this.questionDao = questionDao;
         this.messageSourceService = messageSourceService;
         this.printService = printService;
+        this.languageConfig = languageConfig;
     }
 
     public void startTest(int size) {
@@ -51,7 +56,8 @@ public class TestImpl implements Test {
     }
 
     @Override
-    public void test() {
+    public void test(PrintStream out, InputStream in) {
+        setStreams(out, in);
         Set<TestQuestion> testQuestions = getDao();
         int numOfQuestions = testQuestions.size();
         int numOfRightAnswers = 0;
@@ -70,6 +76,13 @@ public class TestImpl implements Test {
             printService.printLine(messageSourceService.getMessage("test.result.pass"));
         }
         printService.printLine(messageSourceService.getMessage("test.result", numOfRightAnswers, numOfQuestions));
+    }
+
+    @Override
+    public void setStreams(PrintStream out, InputStream in) {
+        printService.setIn(in);
+        printService.setOut(out);
+        controller.setIn(in);
     }
 
 }

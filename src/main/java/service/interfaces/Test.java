@@ -8,5 +8,7 @@ import java.io.PrintStream;
  */
 public interface Test {
 
-    void test();
+    void test(PrintStream out, InputStream in);
+
+    void setStreams(PrintStream out, InputStream in);
 }
