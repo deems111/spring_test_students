@@ -30,6 +30,8 @@ public class TestImplTest {
     @Autowired
     private LanguageConfig languageConfig;
 
+    private static final String TEST_FILE_PATH = "C://Users//user//1.txt";
+
     @Test
     public void testTest() throws Exception {
         languageConfig.setLocale(Locale.ENGLISH);
@@ -39,7 +41,7 @@ public class TestImplTest {
                 .thenReturn("1024")
                 .thenReturn("255")
                 .thenReturn("15");
-        System.setOut(new PrintStream(new File("C://Users//dmitr//test.txt")));
+        System.setOut(new PrintStream(new File(TEST_FILE_PATH)));
         test.test(System.out, System.in);
 
         StringBuilder expected = new StringBuilder("Test for student")
@@ -56,7 +58,7 @@ public class TestImplTest {
     private String getResultString() throws Exception {
         StringBuilder builder = new StringBuilder();
 
-        FileReader reader = new FileReader("C://Users//dmitr//test.txt");
+        FileReader reader = new FileReader(TEST_FILE_PATH);
         Scanner scanner = new Scanner(reader);
         while (scanner.hasNextLine()) {
             builder.append(scanner.nextLine());

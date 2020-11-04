@@ -4,3 +4,7 @@ app:
   langMap:
     ru_RU: Russian
     en_US: English
+
+  shell:
+    interactive:
+      enabled: false
